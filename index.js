@@ -1,5 +1,6 @@
 const express = require('express');
 const { MongoClient } = require('mongodb');
+const ObjectId =require("mongodb").ObjectId;
 const app = express();
 const cors =require("cors");
 require('dotenv').config();
@@ -18,11 +19,33 @@ const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology:
 async function run() {
     try{
         await client.connect();
-
-        const database = client.db("guesterra");
-        const usersCollection = database.collection("users");
-
         
+        const database = client.db("guesterra");
+        const hotelCollection = database.collection("hotels");
+        const bookings = database.collection("bookings")
+
+        // GET api
+        app.get('/hotels',async(req,res) => {
+          const doc = hotelCollection.find({});
+          const result = await doc.toArray();
+          res.send(result);
+        });
+
+        // find api
+        app.get('/hotels/:id', async(req, res) => {
+          const id =req.params.id;
+          const query = {_id: ObjectId(id)};
+          const result = await hotelCollection.findOne(query);
+          res.send(result);
+        });
+
+         //bookings
+         app.post("/bookings", async(req, res) => {
+           const result = await bookings.insertOne(req.body);
+           res.json(result);
+         })
+        
+
     }
     finally{
         // await client.close();
@@ -37,3 +60,5 @@ app.get('/', (req, res) => {
 app.listen(port, () => {
   console.log("Running server at port", port)
 })
+
+
