@@ -45,12 +45,6 @@ async function run() {
            res.json(result);
          });
 
-        //  Get all bookings
-         app.get('/bookings',async(req,res) => {
-          const doc = bookings.find({});
-          const result = await doc.toArray();
-          res.send(result);
-        });
         
        
 
