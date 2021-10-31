@@ -45,6 +45,12 @@ async function run() {
            res.json(result);
          });
 
+        //  Get all bookings
+         app.get('/bookings',async(req,res) => {
+          const doc = bookings.find({});
+          const result = await doc.toArray();
+          res.send(result);
+        });
         
        
 
@@ -56,7 +62,7 @@ async function run() {
 run().catch(console.dir);
 
 app.get('/', (req, res) => {
-  res.send('Server is running')
+  res.send('Hello World!')
 })
 
 app.listen(port, () => {
