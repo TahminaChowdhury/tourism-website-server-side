@@ -22,16 +22,17 @@ async function run() {
         
         const database = client.db("guesterra");
         const hotelCollection = database.collection("hotels");
-        const bookings = database.collection("bookings")
+        const bookings = database.collection("bookings");
+        const addService = database.collection("addService")
 
-        // GET api
+        // get api
         app.get('/hotels',async(req,res) => {
           const doc = hotelCollection.find({});
           const result = await doc.toArray();
           res.send(result);
         });
 
-        // find api
+        //find api
         app.get('/hotels/:id', async(req, res) => {
           const id =req.params.id;
           const query = {_id: ObjectId(id)};
@@ -45,14 +46,39 @@ async function run() {
            res.json(result);
          });
 
-        //  Get all bookings
+        //  get all bookings
          app.get('/bookings',async(req,res) => {
           const doc = bookings.find({});
           const result = await doc.toArray();
           res.send(result);
         });
-        
-       
+
+
+        // update bookings
+        app.put("/bookings/:id",async(req,res) => {
+          console.log(req.params.id);
+        })
+
+
+        //  delete bookings
+        app.delete("/bookings/:id", async(req,res) => {
+            const id =req.params.id;
+            const query = {_id: ObjectId(id)};
+            const result = await bookings.deleteOne(query);
+            res.send(result);
+        })
+
+        // my bookings
+        app.get("/bookings/:email", async(req,res) => {
+          const result = await bookings.find({ email: req.params.email }).toArray();
+          res.send(result);
+        })
+
+        // add service
+        app.post("/addService", async(req,res) => {
+          const result = await addService.insertOne(req.body);
+           res.json(result);
+        })
 
     }
     finally{
