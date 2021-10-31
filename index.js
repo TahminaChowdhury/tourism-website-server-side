@@ -35,7 +35,7 @@ async function run() {
         app.get('/hotels/:id', async(req, res) => {
           const id =req.params.id;
           const query = {_id: ObjectId(id)};
-          const result = await hotelCollection.findOne(query);
+          const result = await hotelCollection.find(query).toArray();
           res.send(result);
         });
 
@@ -43,8 +43,16 @@ async function run() {
          app.post("/bookings", async(req, res) => {
            const result = await bookings.insertOne(req.body);
            res.json(result);
-         })
+         });
+
+        //  Get all bookings
+         app.get('/bookings',async(req,res) => {
+          const doc = bookings.find({});
+          const result = await doc.toArray();
+          res.send(result);
+        });
         
+       
 
     }
     finally{
