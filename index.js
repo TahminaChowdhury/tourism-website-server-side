@@ -77,23 +77,30 @@ async function run() {
             const query = {_id: ObjectId(id)};
             const result = await bookings.deleteOne(query);
             res.send(result);
-        })
+        });
 
 
         // my bookings
         app.get("/bookings/:email", async(req,res) => {
           const result = await bookings.find({ email: req.params.email }).toArray();
           res.send(result);
-        })
+        });
 
 
         // add service
         app.post("/addService", async(req,res) => {
           const result = await addService.insertOne(req.body);
            res.json(result);
-        })
+        });
+        
 
+        // get service
+        app.get("/addService", async(req,res) => {
+          const result = await addService.find({}).toArray();
+           res.send(result);
+        });
     }
+    
     finally{
         // await client.close();
     }
