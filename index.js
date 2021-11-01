@@ -25,12 +25,14 @@ async function run() {
         const bookings = database.collection("bookings");
         const addService = database.collection("addService")
 
+
         // get api
         app.get('/hotels',async(req,res) => {
           const doc = hotelCollection.find({});
           const result = await doc.toArray();
           res.send(result);
         });
+
 
         //find api
         app.get('/hotels/:id', async(req, res) => {
@@ -39,6 +41,7 @@ async function run() {
           const result = await hotelCollection.find(query).toArray();
           res.send(result);
         });
+
 
          //bookings
          app.post("/bookings", async(req, res) => {
@@ -55,9 +58,17 @@ async function run() {
 
 
         // update bookings
-        app.put("/bookings/:id",async(req,res) => {
-          console.log(req.params.id);
-        })
+        app.put("/updatestatus/:id",async(req,res) => {
+          const id = req.params.id;
+            const updateStatus = req.body;
+            const filter = { _id: ObjectId(id) };
+            const result = await bookings.updateOne(filter, {
+              $set: {
+                status: updateStatus.status,
+              },
+            })
+            res.json(result)
+        });
 
 
         //  delete bookings
@@ -68,11 +79,13 @@ async function run() {
             res.send(result);
         })
 
+
         // my bookings
         app.get("/bookings/:email", async(req,res) => {
           const result = await bookings.find({ email: req.params.email }).toArray();
           res.send(result);
         })
+
 
         // add service
         app.post("/addService", async(req,res) => {
